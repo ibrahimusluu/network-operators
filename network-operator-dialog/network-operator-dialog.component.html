@@ -1,0 +1,172 @@
+<span class="span-3">{{ data.title }}</span>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-content *ngIf="!data.component">
+    <div *ngFor="let item of data.editFields">
+        <mat-form-field *ngIf="item.inputType != 'checkbox'">
+            <mat-label [ngStyle]="item.required && !data.copy[item.index] && {'color': 'red'}">{{item.inputLabel}}
+            </mat-label>
+
+            <input *ngIf="item.inputType == 'number' || item.inputType == 'text' || item.inputType=='password'"
+                [type]="item.inputType" matInput [(ngModel)]="data.copy[item.index]" />
+
+            <textarea class="textareaText1" *ngIf="item.inputType == 'textarea'" matInput
+                [(ngModel)]="data.copy[item.index]">
+            </textarea>
+
+            <mat-hint *ngIf="item?.inputType == 'textarea'" align="end">
+                {{data.copy[item.index].length}}
+            </mat-hint>
+
+            <ng-container *ngIf="item.inputType == 'select'">
+                <mat-select [(ngModel)]="data.copy[item.index]">
+                    <mat-option *ngFor="let option of item.options" [value]="option.value">{{option.label}}</mat-option>
+                </mat-select>
+            </ng-container>
+
+            <ng-container *ngIf="item.inputType == 'selectNew'">
+                <mat-select [(ngModel)]="data.copy[item.index]">
+                    <mat-option *ngFor="let option of item.options" [value]="option[item.valueField]">
+                        {{option[item.labelField]}}</mat-option>
+                </mat-select>
+            </ng-container>
+
+        </mat-form-field>
+
+        <mat-checkbox *ngIf="item.inputType == 'checkbox'" color="primary" (change)="data.copy[item.index]"
+            [(ngModel)]="data.copy[item.index]">
+            {{item.inputLabel}}
+        </mat-checkbox>
+
+        <div *ngIf="item.inputType == 'dropbox'">
+            <ngx-dropzone (change)="onSelect($event)">
+                <ngx-dropzone-label>Anklicken oder Bild einfach hier hineinziehen</ngx-dropzone-label>
+                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+            </ngx-dropzone>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" #saveButton (click)="save()">Speichern</button>
+
+    <mat-menu x-Position="before" #menu="matMenu">
+        <button mat-menu-item (click)="saveTariff()">Auf bestehende Tarife anwenden</button>
+        <button mat-menu-item (click)="saveContract()">Auf bestehende Tarife und Verträge anwenden</button>
+    </mat-menu>
+
+    <button mat-stroked-button color="primary" class="b-4" [mat-menu-trigger-for]="menu">
+        <i class="material-icons i-1">+</i>
+    </button>
+
+    <button mat-button mat-dialog-close color="warn">Abbrechen</button>
+</mat-dialog-actions>
+
+<mat-dialog-content class="matDialogContent-01" *ngIf="data.component === 'bHours'">
+    <div *ngFor="let item of data.editFields">
+        <mat-form-field *ngIf="item.inputType != 'dateTimePickerStart' && item.inputType != 'dateTimePickerEnd'">
+            <mat-label [ngStyle]="item.required && !data.copy[item.index] && {'color': 'red'}">{{item.inputLabel}}
+            </mat-label>
+            <input *ngIf="item.inputType == 'number' || item.inputType == 'text'" [type]="item.inputType" matInput
+                [(ngModel)]="data.copy[item.index]" />
+
+            <textarea *ngIf="item.inputType == 'textarea'" matInput [(ngModel)]="data.copy[item.index]"></textarea>
+
+            <ng-container *ngIf="item.inputType == 'select'">
+                <mat-select [(ngModel)]="data.copy[item.index]">
+                    <mat-option *ngFor="let option of item.options" [value]="option.value">{{option.label}}</mat-option>
+                </mat-select>
+            </ng-container>
+        </mat-form-field>
+
+        <ng-container *ngIf="item.inputType == 'dateTimePickerStart'">
+            <mat-form-field class="matFormField-01">
+                <mat-label [ngStyle]="item.required && !data.copy[item.index] && {'color': 'red'}">{{item.inputLabel}}
+                </mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="data.copy[item.index]"
+                    (dateChange)="fillEndDate()" readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="matFormField-02">
+                <mat-label>Uhrzeit</mat-label>
+                <input matInput [(ngModel)]="data.copy[item.startTime] " [ngxTimepicker]="startTime" [format]="24"
+                    readonly>
+                <ngx-material-timepicker #startTime></ngx-material-timepicker>
+            </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="item.inputType == 'dateTimePickerEnd'">
+            <mat-form-field class="matFormField-01">
+                <mat-label [ngStyle]="item.required && !data.copy[item.index] && {'color': 'red'}">{{item.inputLabel}}
+                </mat-label>
+                <input matInput [matDatepicker]="picker1" [(ngModel)]="data.copy[item.index]" readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="matFormField-02">
+                <mat-label>Uhrzeit</mat-label>
+                <input matInput [(ngModel)]="data.copy[item.endTime]" [ngxTimepicker]="endTime" [format]="24" readonly>
+                <ngx-material-timepicker #endTime></ngx-material-timepicker>
+            </mat-form-field>
+
+            <mat-button-toggle-group class="matButtonToggleGroup-01" #group="matButtonToggleGroup"
+                (click)="selectDuration(group.value);">
+                <mat-button-toggle value="15" class="matButtonToggle-01">
+                    0:15
+                </mat-button-toggle>
+                <mat-button-toggle value="30" class="matButtonToggle-01">
+                    0:30
+                </mat-button-toggle>
+                <mat-button-toggle value="45" class="matButtonToggle-01">
+                    0:45
+                </mat-button-toggle>
+                <mat-button-toggle value="60" class="matButtonToggle-01">
+                    1:00
+                </mat-button-toggle>
+                <mat-button-toggle value="90" class="matButtonToggle-01">
+                    1:30
+                </mat-button-toggle>
+                <mat-button-toggle value="120" class="matButtonToggle-01">
+                    2:00
+                </mat-button-toggle>
+                <mat-button-toggle value="180" class="matButtonToggle-01">
+                    3:00
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </ng-container>
+    </div>
+
+    <mat-checkbox color="primary" [(ngModel)]="data.copy['bhour_billable']"
+        [disabled]="data.copy['bhour_invoice_id']!=='0' && data.copy?.bhour_invoice_id">
+        Verrechenbar
+    </mat-checkbox>
+
+    <mat-form-field class="matFormField-03" *ngIf="data.copy['bhour_billable'] && data.type==='edit'">
+        <mat-label>Abgerechnet auf Rechnung</mat-label>
+        <mat-select [(ngModel)]="data.copy['bhour_invoice_id']">
+            <mat-option value="0">Nicht abgerechnet</mat-option>
+            <mat-option *ngFor="let option of data.lastInvoices" [value]="option.value">{{option.label}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div [hidden]="!data.billedWarning" class="div-1">
+        <i class="material-icons-outlined icon-2">feedback</i>
+        <span class="span-1">Posten wurde bereits abgerechnet.
+            <span class="span-2" (click)="data.billedWarning = false;">Trotzdem fortfahren</span> ?
+        </span>
+    </div>
+
+    <mat-dialog-actions class="matDialogAction-01">
+        <button mat-raised-button color="primary" #saveButton (click)="save()"
+            [disabled]="data.billedWarning">Speichern</button>
+
+        <button mat-button mat-dialog-close color="warn">Abbrechen</button>
+    </mat-dialog-actions>
+
+</mat-dialog-content>

@@ -1,0 +1,87 @@
+<div class="div-1">
+    <mat-toolbar class="a-4">
+        <span>Netzbetreiber</span>
+        <button mat-stroked-button color="primary" class="btn-1" (click)="showEditDialogAsAdd()">
+            <i class="material-icons">add_circle_outline</i>
+        </button>
+    </mat-toolbar>
+    <div class="div-content">
+
+        <!-- Loader while data is being loaded from the API -->
+        <div class="loaderDiv" *ngIf="contentLoading">
+            <span class="loaderSpan">Daten werden geladen</span>
+            <div class="loader"></div>
+        </div>
+
+        <!-- If no data is available -->
+        <div *ngIf="dataSource.data.length===0 && !contentLoading" class="div-2">Es liegen keine Daten vor.</div>
+
+
+        <div [hidden]="dataSource.data.length===0 || contentLoading">
+            <table mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="edit">
+                    <th mat-header-cell *matHeaderCellDef>Edit</th>
+                    <td mat-cell class="" *matCellDef="let status">
+                        <a class="a-3" *ngIf="admin == '1'" (click)="showEditDialog(status)">
+                            <i class="material-icons-outlined icon-2">edit</i>
+                        </a>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Netz</th>
+                    <td mat-cell class="cell-1" *matCellDef="let status">{{ status.netz_name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="vvl">
+                    <th mat-header-cell *matHeaderCellDef>VVL Zeit</th>
+                    <td mat-cell class="cell-1" *matCellDef="let status">{{ status.netz_vvl }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="contract">
+                    <th mat-header-cell *matHeaderCellDef>Vertragslaufzeit</th>
+                    <td mat-cell class="cell-1" *matCellDef="let status">{{ status.netz_vertragsdauer }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="existingTariff">
+                    <th mat-header-cell *matHeaderCellDef>Bestehende Tarife</th>
+                    <td mat-cell class="cell-1" *matCellDef="let status">{{ status.bestehende_tarife }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="tariff">
+                    <th mat-header-cell *matHeaderCellDef>Tarife</th>
+                    <td mat-cell class="cell-1" *matCellDef="let status">Verwalten</td>
+                </ng-container>
+
+                <ng-container matColumnDef="activate">
+                    <th mat-header-cell *matHeaderCellDef>Aktivieren</th>
+                    <td mat-cell class="cell-1" *matCellDef="let status">
+                        <button mat-stroked-button [ngClass]="status.active == 0 ? 'btn-activate' : 'btn-in-activate'"
+                            (click)="clickButton(status); status.active = !status.active; ">
+                            <ng-container *ngIf="status.active == 0">Aktivieren</ng-container>
+
+                            <ng-container *ngIf="status.active == 1">Deaktivieren</ng-container>
+
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="abgeschlossen">
+                    <th mat-header-cell *matHeaderCellDef>Abgeschlossen</th>
+                    <td mat-cell class="" *matCellDef="let status">
+                        <mat-checkbox (change)="toggleFinished(status)"
+                            [checked]="status.repstatus_abgeschlossen == '1'"></mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></tr>
+                <tr mat-row [ngClass]="{'highlight': index%2 == 1}"
+                    *matRowDef="let row; columns: displayedColumns; let index = index"></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-3" [hidden]="dataSource.data.length===0 || contentLoading">
+        <mat-paginator [pageSizeOptions]="[100,250, 500, 1000]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

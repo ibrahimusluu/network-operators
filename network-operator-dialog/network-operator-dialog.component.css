@@ -1,0 +1,119 @@
+* {
+	font-family: Arial, serif  ;
+	font-size: 13px;
+}
+
+.div-1 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.icon-2 {
+	color: red;
+	font-size: 27px;
+	vertical-align: middle;
+	margin-right: 7px;
+}
+
+.matButtonToggle-01 {
+	background-color: #e3ffef;
+}
+
+.matButtonToggleGroup-01 {
+	margin-left: 5%;
+	margin-bottom: 10px;
+}
+
+mat-dialog-content {
+	width: 400px;
+	margin-top: 15px;
+}
+
+.matDialogAction-01 {
+	float: right;
+}
+
+.matDialogContent-01 {
+	overflow: unset;
+}
+
+.matCheckbox-01 {
+	margin-left: 30px;
+}
+
+mat-form-field {
+	width: 100%;
+	font-size: 13px;
+}
+
+.matFormField-01 {
+	width: 45%;
+}
+
+.matFormField-02 {
+	margin-left: 10%;
+	width: 45%;
+}
+
+.matFormField-03 {
+	margin-left: 30px;
+	width: 65%;
+}
+
+.material-icons-outlined {
+	font-family: 'Material Icons Outlined';
+}
+
+.span-1 {
+	font-weight: bold;
+}
+
+.span-2 {
+	text-decoration: underline;
+	cursor: pointer;
+	color: green;
+}
+
+.span-3 {
+	margin-bottom: 3px;
+	display: inline-block;
+}
+
+/* textarea {
+	height: 80px;
+} */
+
+.textareaText1 {
+	height: 30px;
+}
+
+.textareaText2 {
+	height: 80px;
+}
+
+.inputClass {
+	margin-left: 2%;
+	width: 45%;
+	font-size: 13px;
+}
+
+.actions-01 {
+	background-color: #f0ad4e;
+    border-color: #eea236;
+	color: #fff;
+}
+
+.a-4{
+    background: none !important;
+    color: #0e0e0e !important;
+}
+
+.b-4 {
+    margin-right: 10px;
+    margin-left: 10px;
+    padding: 0 10px;
+    min-width: 30px;
+    border-color: #3f51b5;
+    line-height: 31px;
+}
+
